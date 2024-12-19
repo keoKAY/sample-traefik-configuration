@@ -1,0 +1,15 @@
+services:
+ nginx:
+   container_name: nginx-cont
+   image: nginx:latest
+   labels: 
+    - "traefik.enable=true"
+    - "traefik.http.routers.nginx.tls=true"
+    - "traefik.http.routers.nginx.rule=Host(`nginx.devnerd.store`)"
+    - "traefik.http.routers.nginx.entrypoints=websecure"
+    - "traefik.http.routers.nginx.tls.certresolver=letsencrypt"
+   networks: 
+    - proxy
+networks:
+  proxy:
+    external: true

@@ -1,0 +1,38 @@
+# This is the cloudflar configuration for wildcard certificates. 
+log: 
+  level: DEBUG
+api: 
+  dashboard: true 
+entryPoints: 
+  web: 
+    address: ":80"
+    # my suspicion is that the http redirections is not needed here.
+    http: 
+      redirections: 
+        entryPoint: 
+          to: websecure
+          scheme: https
+  websecure: 
+    address: ":443"
+    http: 
+      tls: 
+        certResolver: letsencrypt
+        domains: 
+          - main: "devnerd.store"
+            sans: "*.devnerd.store"
+certificatesResolvers: 
+  letsencrypt: 
+    acme: 
+      email: "lyvanna544@gmail.com" 
+      storage: "/data/acme.json"
+      caServer: "https://acme-staging-v02.api.letsencrypt.org/directory" 
+      dnsChallenge: 
+        provider: cloudflare
+        delayBeforeCheck: 60
+        resolvers: 
+          - "1.1.1.1:53"
+          - "1.0.0.1:53"
+providers: 
+  docker: 
+    endpoint: "unix:///var/run/docker.sock"
+    exposedByDefault: false
